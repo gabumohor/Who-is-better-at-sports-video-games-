@@ -1,0 +1,84 @@
+---
+title: "*Who is Better at Sports Video Games*"
+output: pdf_document
+author: George Abumohor
+date: "06/09/2023"
+---
+##  Sports Video Games Performance
+
+### *Data Collection*
+
+*The data for the performance of participants in sports video games was collected through a series of gaming sessions. Each participant played NBA 2K, Madden, FIFA, and UFC video games. The number of wins and losses were recorded for each game to analyze the performance of the participants.*
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+
+# Create the dataset
+participants <- c("George", "Diego", "Jon", "Carl", "Cisco")
+nba2k_wins <- c(8, 6, 10, 7, 5)
+nba2k_losses <- c(2, 4, 0, 3, 5)
+madden_wins <- c(9, 8, 7, 6, 10)
+madden_losses <- c(1, 2, 3, 4, 0)
+fifa_wins <- c(7, 8, 6, 9, 5)
+fifa_losses <- c(3, 2, 4, 1, 5)
+ufc_wins <- c(6, 5, 7, 4, 8)
+ufc_losses <- c(4, 5, 3, 6, 2)
+
+# Combine the data into a data frame
+game_results <- data.frame(Participant = participants,
+                           NBA_2K_Wins = nba2k_wins,
+                           NBA_2K_Losses = nba2k_losses,
+                           Madden_Wins = madden_wins,
+                           Madden_Losses = madden_losses,
+                           FIFA_Wins = fifa_wins,
+                           FIFA_Losses = fifa_losses,
+                           UFC_Wins = ufc_wins,
+                           UFC_Losses = ufc_losses)
+
+# Calculate win percentages for each game
+game_results_summary <- game_results %>%
+  mutate(NBA_2K_Percentage = NBA_2K_Wins / (NBA_2K_Wins + NBA_2K_Losses),
+         Madden_Percentage = Madden_Wins / (Madden_Wins + Madden_Losses),
+         FIFA_Percentage = FIFA_Wins / (FIFA_Wins + FIFA_Losses),
+         UFC_Percentage = UFC_Wins / (UFC_Wins + UFC_Losses)) %>%
+  select(-contains("_Wins"), -contains("_Losses"))
+
+```
+
+## Summary of the Dataset
+
+
+```{r cars}
+# Display the summary table
+knitr::kable(game_results_summary, caption = "Summary of Sports Video Games Performance", align = "c")
+```
+# Visualization: Win Percentages
+
+
+
+```{r pressure, echo=FALSE}
+# Reshape the dataset for visualization
+game_results_long <- game_results_summary %>%
+  pivot_longer(cols = contains("_Percentage"),
+               names_to = "Game",
+               values_to = "Win_Percentage") %>%
+  mutate(Game = gsub("_Percentage", "", Game))
+
+# Create a colorful conclusive visualization
+ggplot(game_results_long, aes(x = Participant, y = Win_Percentage, fill = Game)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title ="Sports Video Games Performance",
+       x = "Participant",
+       y = "Win Percentage",
+       fill = "Game") +
+  theme_minimal()
+
+
+```
+
+
+
+
+*The visualization above displays the win percentages of different participants in sports video games. Each bar represents a participant, and the height of the bar represents their win percentage in a specific game.*
+
+*From the visualization and the summary table, we can conclude that some participants have higher win percentages in certain games compared to others. The dataset provides insights into the performance of each participant in NBA 2K, Madden, FIFA, and UFC video games.*
